@@ -1,7 +1,7 @@
 package objects;
 /*-------a*/
 /**
- * hope man
+ *
  * @author walo
  *
  */
