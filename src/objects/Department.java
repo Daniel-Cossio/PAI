@@ -1,5 +1,10 @@
 package objects;
 /*-------a*/
+/**
+ * hope man
+ * @author walo
+ *
+ */
 public class Department {
 	
 	
