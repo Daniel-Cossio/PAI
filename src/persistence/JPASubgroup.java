@@ -8,12 +8,13 @@ import objects.Subgroup;
 
 public class JPASubgroup extends Subgroup{
 
-
+	//Previous paradigm: 
+	
 	/**
 	 * this function return all the serch
 	 * @return
 	 */
-	public static ArrayList<Subgroup> selectAll() {
+	/*public static ArrayList<Subgroup> selectAll() {
 		return selectExecute(toSelectAllQuery());
 	}
 	
@@ -23,9 +24,9 @@ public class JPASubgroup extends Subgroup{
 	 * @return
 	 */
 	
-	public static ArrayList<Subgroup> selectLike(String srch) {
+	/*public static ArrayList<Subgroup> selectLike(String srch) {
 		return selectExecute(toSelectLikeQuery(toSelectLikeQuery(srch)));
-	}
+	}*/
 	
 	/**
 	 * execute the same select
@@ -33,7 +34,7 @@ public class JPASubgroup extends Subgroup{
 	 * @return
 	 */ 
 	
-	private static ArrayList<Subgroup> selectExecute(String query){
+	/*private static ArrayList<Subgroup> selectExecute(String query){
 		ArrayList<Subgroup> subgrps = new ArrayList<Subgroup>();
 		ResultSet rs = JPASQLITEUtil.generalExecuteQuerry(query);
 		try {
@@ -45,9 +46,9 @@ public class JPASubgroup extends Subgroup{
 			System.err.println(e.getMessage());
 			return null;
 		}
-	}
+	}*/
 	
-	public static boolean exist(Subgroup dep) {
+	/*public static boolean exist(Subgroup dep) {
 		ResultSet rs = JPASQLITEUtil.generalExecuteQuerry(dep.toExistQuery());
 		try {
 			return rs.next();
@@ -57,7 +58,7 @@ public class JPASubgroup extends Subgroup{
 //			e.printStackTrace();
 			return false;
 		}
-	}
+	}*/
 	
 	
 	
@@ -67,13 +68,13 @@ public class JPASubgroup extends Subgroup{
 	 * 
 	 */
 	
-	public static void printConsole() {
+	/*public static void printConsole() {
 		ArrayList<Subgroup> deps = selectAll();
 //		ArrayList<Subgroup> deps = selectLike("d");
 		for (int i = 0; i < deps.size(); i++) {
 			System.out.println(deps.get(i).toStringF());
 		}
-	}
+	}*/
 	
 //	public static void main(String[] args) {
 //		INSERT
