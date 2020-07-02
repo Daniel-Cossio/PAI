@@ -58,7 +58,7 @@ public class Groupp {
 	}
 	
 	/**
-	 * Delete
+	 * Delete 
 	 */
 	public String toDeleteQuery() {
 		return "DELETE FROM "+tableName+" WHERE codeG = '" + codeG+"'";
