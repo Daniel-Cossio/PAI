@@ -4,7 +4,7 @@ package objects;
 /**
  *
  * @author walo
- *
+ * 
  */
 
 public class Department {

@@ -62,7 +62,7 @@ public class Groupp {
 	 */
 	public String toDeleteQuery() {
 		return "DELETE FROM "+tableName+" WHERE codeG = '" + codeG+"'";
-	}
+	}   
 	
 	/**
 	 * Exist

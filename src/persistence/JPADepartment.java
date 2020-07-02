@@ -14,7 +14,7 @@ public class JPADepartment {
   private static Connection conn =null;
   
   
-  //select
+  //select 
 
   public static ArrayList<Department>  select(){
     String sqlQ = "SELECT * FROM " + tableName;//SQL TO SEARCH ALLS
