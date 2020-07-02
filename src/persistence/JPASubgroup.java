@@ -47,7 +47,7 @@ public class JPASubgroup extends Subgroup{
 			return null;
 		}
 	}*/
-	
+	 
 	/*public static boolean exist(Subgroup dep) {
 		ResultSet rs = JPASQLITEUtil.generalExecuteQuerry(dep.toExistQuery());
 		try {
