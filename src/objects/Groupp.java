@@ -15,6 +15,11 @@ public class Groupp {
 		this.codeG = codeG;
 		this.nameG = nameG;
 	}
+	
+	 /**
+	   * 
+	   * Getters and setters
+	   */
 
 	public String getCodeG() {
 		return codeG;

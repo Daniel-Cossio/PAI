@@ -1,10 +1,12 @@
 package objects;
+
 /*-------a*/
 /**
  *
  * @author walo
  *
  */
+
 public class Department {
 	
 	
@@ -86,14 +88,17 @@ public class Department {
 	/**
 	 * Select
 	 */
+	
 	public static String toSelectAllQuery() {
 		return  "SELECT * FROM "+tableName+" ";
 	}
+	
 	/**
 	 * this use like  
 	 * @param srch
 	 * @return
 	 */
+	
 	public static String toSelectLikeQuery(String srch) {
 		return  "SELECT * FROM "+tableName+" WHERE nameD like '%"+srch+ "%'";
 	}

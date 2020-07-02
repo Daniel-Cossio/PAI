@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import objects.Subgroup;
 
 public class JPASubgroup extends Subgroup{
-	
+
 
 	/**
 	 * this function return all the serch
@@ -22,6 +22,7 @@ public class JPASubgroup extends Subgroup{
 	 * query with 'like'
 	 * @return
 	 */
+	
 	public static ArrayList<Subgroup> selectLike(String srch) {
 		return selectExecute(toSelectLikeQuery(toSelectLikeQuery(srch)));
 	}
@@ -30,7 +31,8 @@ public class JPASubgroup extends Subgroup{
 	 * execute the same select
 	 * @param query
 	 * @return
-	 */
+	 */ 
+	
 	private static ArrayList<Subgroup> selectExecute(String query){
 		ArrayList<Subgroup> subgrps = new ArrayList<Subgroup>();
 		ResultSet rs = JPASQLITEUtil.generalExecuteQuerry(query);
@@ -51,6 +53,7 @@ public class JPASubgroup extends Subgroup{
 			return rs.next();
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
+		
 //			e.printStackTrace();
 			return false;
 		}
@@ -88,5 +91,4 @@ public class JPASubgroup extends Subgroup{
 //		printConsole();
 //	}
 	
-
 }

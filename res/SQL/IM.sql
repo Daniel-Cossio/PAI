@@ -41,8 +41,8 @@ CREATE TABLE movement
     dateM DATE,
     codeInvoice VARCHAR(20), --invoice code to detect fact or doc that do the movement
     typeM VARCHAR(15), --{in, out, adhin, adjout}
-    quantity DECIMAL(13,4),
-    total DECIMAL(13,4),
+    quantity DECIMAL(13,4), 
+    total DECIMAL(13,4), --(precio total)
     unitPryce DECIMAL(13,4),
     codeP VARCHAR(10), --fonring key to product
     codeD VARCHAR(10) -- foreing key to department

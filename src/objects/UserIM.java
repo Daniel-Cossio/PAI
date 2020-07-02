@@ -6,6 +6,7 @@ public class UserIM {
 	private String codeU, nameU, passwordU;
 	//constructor
 	public UserIM() {
+		
 	}
 	public UserIM(String codeU, String nameU, String passwordU) {
 		super();

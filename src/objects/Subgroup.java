@@ -10,13 +10,14 @@ public class Subgroup {
 	}
 	
 	//getters and setters
-	
+
 	public Subgroup(String codeSG, String nameSG) {
 		super();
 		this.codeSG = codeSG;
 		this.nameSG = nameSG;
 		codeG =null;
 	}
+	
 	public Subgroup(String codeSG, String nameSG, String codeG) {
 		super();
 		this.codeSG = codeSG;
@@ -105,4 +106,11 @@ public class Subgroup {
 		return  "SELECT * FROM "+tableName+" WHERE nameSG like '%"+srch+ "%'";
 	}
 
+	
+	public static void main(String[] args) {
+		System.out.println(new Subgroup("333dddddd3","asaaaaaa", "asdasdasddddddddddddd").toStringF());
+	}
+	
+	
+	
 }

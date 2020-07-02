@@ -2,11 +2,9 @@ package persistence;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
+ 
 
 public class JPASQLITEUtil {
 	 
@@ -45,6 +43,8 @@ public class JPASQLITEUtil {
 	}
 	
 		
+	// previous paradigm:
+	
 	
 	/**
 	 * EXIST
@@ -53,6 +53,11 @@ public class JPASQLITEUtil {
 	 * @param query
 	 * @return if exist a dupla with by this query
 	 */
+	
+	
+	
+	
+/*
 	public static boolean generalExist(String query){
 		conn = null;
 		
@@ -72,7 +77,7 @@ public class JPASQLITEUtil {
 		}
 		return false;
 	}
-	
+	*/
 	
 	/**
 	 * SELECT
@@ -80,7 +85,7 @@ public class JPASQLITEUtil {
 	 * @param query
 	 * @return resultset to consult
 	 */
-	public static ResultSet generalExecuteQuerry(String query){
+	/*public static ResultSet generalExecuteQuerry(String query){
 		conn = null;
 		ResultSet rs = null;
 		try {
@@ -94,13 +99,13 @@ public class JPASQLITEUtil {
 		}
 		return rs;
 	}
-	
+	*/
 	/**
 	 * INSERT - UPDATE - DELETE 
 	 * 
 	 * @param query
 	 */
-	public static void generalExecuteUpdate(String query ) {
+	/*public static void generalExecuteUpdate(String query ) {
 		conn = null;
 		try {
 			conn = getConnection();
@@ -109,8 +114,8 @@ public class JPASQLITEUtil {
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		}
-	}	
+	}*/	
 	
-	
+
 	
 }
