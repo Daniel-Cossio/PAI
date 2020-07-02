@@ -16,7 +16,7 @@ public class JPAGroupp extends Groupp{
 	  
 	//Select
 	
-	public static ArrayList<Groupp>  select(){
+	public static ArrayList<Groupp>  selectG(){
 	    String sqlQ = "SELECT * FROM " + tableName;//SQL TO SEARCH ALLS
 	    
 	    ArrayList<Groupp> groups = new ArrayList<Groupp>();
@@ -40,7 +40,7 @@ public class JPAGroupp extends Groupp{
 	
 	//Update
 	
-	public static void updateD(Groupp groupp) {
+	public static void updateG(Groupp groupp) {
 		conn = null;
 		try {
 			conn = JPASQLITEUtil.getConnection();//get connection
@@ -64,7 +64,7 @@ public class JPAGroupp extends Groupp{
 	
 	 //Delete
 
-	  public static void deleteD(String codeG) {
+	  public static void deleteG(String codeG) {
 			conn  = null;
 			try {
 				conn  = JPASQLITEUtil.getConnection();//get connection
@@ -85,7 +85,7 @@ public class JPAGroupp extends Groupp{
 	
 	  
 	//Insert
-	  public static void createD(Groupp groupp) {
+	  public static void createG(Groupp groupp) {
 			conn = null;//empty connection
 			
 			try {
@@ -116,7 +116,7 @@ public class JPAGroupp extends Groupp{
 	  
 	  
 	// exist
-	  public static boolean existD(String codeG) {
+	  public static boolean existG(String codeG) {
 			conn = null;
 			ResultSet rs = null;
 			try {

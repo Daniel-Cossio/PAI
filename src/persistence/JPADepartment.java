@@ -16,7 +16,7 @@ public class JPADepartment {
   
   //select 
 
-  public static ArrayList<Department>  select(){
+  public static ArrayList<Department>  selectD(){
     String sqlQ = "SELECT * FROM " + tableName;//SQL TO SEARCH ALLS
     
     ArrayList<Department> depts = new ArrayList<Department>();
@@ -110,7 +110,7 @@ public class JPADepartment {
 		}
 	}
   
-  // exist
+  //Exist
   public static boolean existD(String codeD) {
 		conn = null;
 		ResultSet rs = null;
