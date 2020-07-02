@@ -13,7 +13,7 @@ public class Groupp {
 	
 	public Groupp(String codeG,String nameG) {
 		this.codeG = codeG;
-		this.nameG = nameG;
+		this.nameG = nameG; 
 	}
 	
 	 /**
