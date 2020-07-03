@@ -8,7 +8,7 @@ public class Movement {
 	 * the codeP = product code
 	 * thr codeD = deprtment code
 	 */
-	private String codeM,nameM,typeM,codeD,codeP;
+	private String codeM,codeFactura,typeM,codeD,codeP;
 	private Date dateM;
 	private double quantityM,totalPryce,unityPryce;
 	
@@ -18,18 +18,22 @@ public class Movement {
 	public Movement() {
 	}
 
-	public Movement(String codeM, String nameM, String typeM, String codeD, String codeP, Date dateM, double quantityM,
+	public Movement(String codeM, String codeF, String typeM, String codeD, String codeP, Date dateM, double quantityM,
 			double totalPryce, double unityPryce) {
 		super();
 		this.codeM = codeM;
-		this.nameM = nameM;
-		this.typeM = typeM;
-		this.codeD = codeD;
-		this.codeP = codeP;
+		this.codeFactura = codeF;
 		this.dateM = dateM;
+		this.typeM = typeM;
+
 		this.quantityM = quantityM;
 		this.totalPryce = totalPryce;
 		this.unityPryce = unityPryce;
+
+		this.codeD = codeD;
+		this.codeP = codeP;
+		
+		
 	}
 
 	
@@ -45,12 +49,12 @@ public class Movement {
 		this.codeM = codeM;
 	}
 
-	public String getNameM() {
-		return nameM;
+	public String getCodeF() {
+		return codeFactura;
 	}
 
-	public void setNameM(String nameM) {
-		this.nameM = nameM;
+	public void setCodeF(String nameM) {
+		this.codeFactura = nameM;
 	}
 
 	public String getTypeM() {

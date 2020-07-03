@@ -21,8 +21,8 @@ CREATE TABLE product
     codeP VARCHAR(10) PRIMARY KEY NOT NULL,
     nameP VARCHAR(30),
     measure varchar(15), --measure to use
-    initial  DECIMAL(13,4), -- stock initial to month
-    stock  DECIMAL(13,4), -- inventario inicial actual
+    -- initial  DECIMAL(13,4), -- stock initial to month <- este es un multivaluado porque guarda los registros iniciales
+    -- stock  DECIMAL(13,4), -- inventario inicial actual <- este se calcula por medio de la sumatoria generada de los registros
     codeSG VARCHAR(10), -- foreing key to subgroup
 
     CONSTRAINT FKSUBGROUP FOREIGN KEY (codeSG) REFERENCES subgroup (codeSG) 
