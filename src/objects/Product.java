@@ -3,9 +3,9 @@ package objects;
 public class Product {
 	
 	
-	//the codeSG = subgoup 
-	private String codeP, nameP, mearure, codeSG;
-	private double initialStock, stock;
+	// codeSG = subgoup code
+	private String codeP, nameP, measure, codeSG;
+	private double initial, stock;
 	
 	/**
 	 * constructor 
@@ -13,13 +13,13 @@ public class Product {
 	public Product() {
 	}
 
-	public Product(String codeP, String nameP, String mearure, String codeSG, double initialStock, double stock) {
+	public Product(String codeP, String nameP, String measure, String codeSG, double initial, double stock) {
 		super();
 		this.codeP = codeP;
 		this.nameP = nameP;
-		this.mearure = mearure;
+		this.measure = measure;
 		this.codeSG = codeSG;
-		this.initialStock = initialStock;
+		this.initial = initial;
 		this.stock = stock;
 	}
 	
@@ -41,12 +41,12 @@ public class Product {
 		this.nameP = nameP;
 	}
 
-	public String getMearure() {
-		return mearure;
+	public String getMeasure() {
+		return measure;
 	}
 
-	public void setMearure(String mearure) {
-		this.mearure = mearure;
+	public void setMeasure(String measure) {
+		this.measure = measure;
 	}
 
 	public String getCodeSG() {
@@ -57,12 +57,12 @@ public class Product {
 		this.codeSG = codeSG;
 	}
 
-	public double getInitialStock() {
-		return initialStock;
+	public double getInitial() {
+		return initial;
 	}
 
-	public void setInitialStock(double initialStock) {
-		this.initialStock = initialStock;
+	public void setInitial(double initial) {
+		this.initial = initial;
 	}
 
 	public double getStock() {
@@ -72,8 +72,6 @@ public class Product {
 	public void setStock(double stock) {
 		this.stock = stock;
 	}
-	
-	
 	
 	
 
