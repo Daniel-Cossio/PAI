@@ -32,8 +32,6 @@ public class Movement {
 
 		this.codeD = codeD;
 		this.codeP = codeP;
-		
-		
 	}
 
 	

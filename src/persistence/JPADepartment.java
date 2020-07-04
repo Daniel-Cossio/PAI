@@ -108,7 +108,7 @@ public class JPADepartment {
 			//try closed connection
 			JPASQLITEUtil.closeConn();
 		}
-	}
+	} 
   
   //Exist
   public static boolean existD(String codeD) {
@@ -134,5 +134,9 @@ public class JPADepartment {
 		
 	
 	}
+  
+  public static void main(String[] args) {
+	  System.out.println("asd");
+  }
 
 }

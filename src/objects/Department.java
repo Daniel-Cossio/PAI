@@ -26,7 +26,7 @@ public class Department {
 		this.codeD = codeD;
 		this.nameD = nameD;
 	}
-	
+	 
 	/**
 	 * 
 	 * Getters and setters
