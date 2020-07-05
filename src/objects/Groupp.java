@@ -3,9 +3,8 @@ package objects;
 public class Groupp {
 	 
 	private String codeG, nameG;
-	private static String tableName="groupp";
 	/**
-	 * Constructor
+	 * Constructors
 	 * 
 	 */
 	public Groupp() {
@@ -37,9 +36,6 @@ public class Groupp {
 		this.nameG = nameG;
 	}
 	
-	
-//	_________SQL
-	
 	/**
 	 * This function return to represent struct To string
 	 * @return
@@ -48,52 +44,4 @@ public class Groupp {
 		return "|" + String.format("%-10s",  codeG) + "|" + String.format("%-10s",  nameG) + "|";
 	}
 	
-	/**
-	 * Insert
-	 * this return the insert query
-	 * @return
-	 */
-	public String toInsertQuery() {
-		return "INSERT INTO "+tableName+" (codeG,nameG) VALUES ('"+codeG+"','"+nameG+"')";
-	}
-	
-	/**
-	 * Delete 
-	 */
-	public String toDeleteQuery() {
-		return "DELETE FROM "+tableName+" WHERE codeG = '" + codeG+"'";
-	}   
-	
-	/**
-	 * Exist
-	 */
-	public String toExistQuery() {
-		return "SELECT * FROM "+tableName+" WHERE codeG = '" +codeG+ "'";
-	}
-	
-	/**
-	 * Update 
-	 */
-	public String toUpdateQuery() {
-		return "UPDATE "+tableName+" SET nameG = '"+nameG+"'"
-                + "WHERE codeG = '" + codeG + "'";
-	}
-	
-	/**
-	 * Select
-	 */
-	public static String toSelectAllQuery() {
-		return  "SELECT * FROM "+tableName+" ";
-	}
-	/**
-	 * this use like  
-	 * @param srch
-	 * @return
-	 */
-	public static String toSelectLikeQuery(String srch) {
-		return  "SELECT * FROM "+tableName+" WHERE nameG like '%"+srch+ "%'";
-	}
-	
-
-
 }
