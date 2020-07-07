@@ -53,16 +53,16 @@ CREATE TABLE rmovement
 (
     code_m int IDENTITY PRIMARY KEY NOT NULL,
     date_m DATE,
-    code_invoice VARCHAR(20), --invoice code to detect fact or doc that do the movement
-    type_m VARCHAR(15), --{in, out, adhin, adjout}
+    code_invoice TEXT, --invoice code to detect fact or doc that do the movement
+    type_m TEXT, --{in, out, adhin, adjout}
     quantity DECIMAL(13,4), 
     -- unit_pryceryce DECIMAL(13,4), <- se calcula a partir del precio total
-    code_p VARCHAR(10), --fonring key to product
-    code_d VARCHAR(10), -- foreing key to department
+    code_p TEXT, --fonring key to product
+    code_u TEXT, -- foreing key to department
 
     CONSTRAINT FKMPRODUCT FOREIGN KEY (code_p) REFERENCES product (code_p) 
     ON DELETE SET NULL,
-    CONSTRAINT FKMDEPARTMENT FOREIGN KEY (code_d) REFERENCES department (code_d) 
+    CONSTRAINT FKUSER FOREIGN KEY (code_u) REFERENCES userim (code_u) 
     ON DELETE SET NULL
 
 );
@@ -71,25 +71,25 @@ CREATE TABLE rmovement
 -- rmout, registry to movement out
 CREATE TABLE rmout
 (
-    code_m TEXT PRIMARY KEY NOT NULL,
+    code_m int IDENTITY PRIMARY KEY NOT NULL,
     code_d TEXT,
 
     CONSTRAINT FKRMOUTTODEP FOREIGN KEY (code_d) REFERENCES department (code_d)
     ON DELETE CASCADE,
     CONSTRAINT FKRMOUTTOMOV FOREIGN KEY (code_m) REFERENCES rmovement (code_m)
     ON DELETE CASCADE
-)
+);
 
 -- rmin, registry to movemento int
 CREATE TABLE rmin
 (
-    code_m TEXT PRIMARY KEY NOT NULL,
-    cout DECIMAL(13,4),
-    total_pryce (13,4),
+    code_m int IDENTITY PRIMARY KEY NOT NULL,
+    account DECIMAL(13,4),
+    total_pryce DECIMAL(13,4),
 
     CONSTRAINT FKMOV2 FOREIGN KEY (code_m) REFERENCES rmovement (code_m)
     ON DELETE CASCADE
-)
+);
 
 
 -- Registro de Cierre de mes (storage date cloced month)
@@ -102,8 +102,8 @@ CREATE TABLE rclosemonth
 -- Registor de stock initial 
 CREATE TABLE rinitialstock
 (
-    code_m TEXT NOT NULL,
-    code_cm TEXT NOT NULL,
+    code_m int IDENTITY NOT NULL,
+    code_cm int IDENTITY NOT NULL,
     measure DECIMAL(13,4),
 
     PRIMARY KEY (code_m,code_cm),
@@ -116,6 +116,7 @@ CREATE TABLE rinitialstock
 
 
 --  ths are some epecial querys 
--- select name
--- from sqlite_master
--- where type = "table"; 
+-- select name from sqlite_master where type = "table"; 
+
+
+--
