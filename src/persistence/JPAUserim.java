@@ -1,4 +1,4 @@
-package presentation;
+package persistence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,25 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Department;
+import entities.Userim;
 
-public class JPADepartment {
-	
+public class JPAUserim {
 
 	//static vars
-	private static String tableName = "department";
+	private static String tableName = "userim";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to department table 
+	 * this function select all duples to userim table 
 	 * @return
 	 */
-	public static ArrayList<Department>  selectAll(){
+	public static ArrayList<Userim>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Department> arrl = new ArrayList<Department>();
+		ArrayList<Userim> arrl = new ArrayList<Userim>();
 
 		//managment connection and result set
 		try{
@@ -35,7 +34,7 @@ public class JPADepartment {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Department(rs.getString(1),rs.getString(2)));
+				arrl.add(new Userim(rs.getString(1),rs.getString(2),rs.getString(3)));
 			}
 			
 			return arrl;
@@ -49,17 +48,17 @@ public class JPADepartment {
 	
 	
 	/**
-	 * This function return all duples to department table with the 
+	 * This function return all duples to userim table with the 
 	 * conincidence with search String
 	 * @param str is the string to search
 	 * @return the arraylist consult
 	 */
-	public static ArrayList<Department> selectName(String str){
+	public static ArrayList<Userim> selectName(String str){
 		
 		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_d LIKE '%"+str+"%'";
+		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_u LIKE '%"+str+"%'";
 		//create array list
-		ArrayList<Department> arrl = new ArrayList<Department>();
+		ArrayList<Userim> arrl = new ArrayList<Userim>();
 
 		
 		try{
@@ -69,7 +68,7 @@ public class JPADepartment {
 			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Department(rs.getString(1),rs.getString(2)));
+				arrl.add(new Userim(rs.getString(1),rs.getString(2),rs.getString(3)));
 			}
 
 			return arrl;
@@ -81,10 +80,10 @@ public class JPADepartment {
 
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived department 
-	 * @param department
+	 * gived userim 
+	 * @param userim
 	 */
-	public static void update(Department department) {
+	public static void update(Userim userim) {
 		//empty connection
 		conn = null;
 		try {
@@ -92,11 +91,12 @@ public class JPADepartment {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET name_d = ? " +" WHERE code_d = ?");
+					"UPDATE " + tableName + " SET name_u = ?, password_u = ? " +" WHERE code_u = ?");
 			
 			//set values
-			pst.setString(1, department.getName_d());
-			pst.setString(2, department.getCode_d());
+			pst.setString(1, userim.getName_u());
+			pst.setString(2, userim.getPassword_u());
+			pst.setString(3, userim.getCode_u());
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -123,7 +123,7 @@ public class JPADepartment {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_d = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_u = ?");//prepare querry
 
 			//set values
 			pst.setString(1, code);
@@ -138,10 +138,10 @@ public class JPADepartment {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened department
-	 * @param department
+	 * This function create a nwe duple and this storage the givened userim
+	 * @param userim
 	 */
-	public static void create(Department department) {
+	public static void create(Userim userim) {
 		//empty connection
 		conn = null;
 
@@ -150,11 +150,12 @@ public class JPADepartment {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_d, name_d) VALUES (?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_u, name_u, password_u) VALUES (?,?,?)");
 
 			//sest values
-			pst.setString(1, department.getCode_d());//insert code
-			pst.setString(2, department.getName_d());//insert name 
+			pst.setString(1, userim.getCode_u());//insert code
+			pst.setString(2, userim.getName_u());//insert name
+			pst.setString(3, userim.getPassword_u());//insert name 
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -185,7 +186,7 @@ public class JPADepartment {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_d = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_u = ?" );
 			//set value
 			pst.setString(1, code);
 			//execute querry
@@ -193,7 +194,7 @@ public class JPADepartment {
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Department");
+			System.out.println("Problems to connect or querry Userim");
 			return false;
 		}finally {
 			//closed conection
@@ -206,7 +207,7 @@ public class JPADepartment {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Department> argpp) {
+	public static void printArrL(ArrayList<Userim> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -215,21 +216,20 @@ public class JPADepartment {
 	}
 	
 	
-	public static void main(String[] args) {
-		//create
-		create(new Department("1", "d1")); 
-		create(new Department("2", "d2"));
-		create(new Department("3", "d3"));
-		//update 
-		update(new Department("2","d update"));
-		//delete
-		delete("3");
-		//exist
-		System.out.println(exist("1"));
-		System.out.println(exist("3"));
-		printArrL(selectAll());
-		printArrL(selectName("up"));
-	}
-
+//	public static void main(String[] args) {
+//		//create
+//		create(new Userim("1", "fernaando","sadfas534")); 
+//		create(new Userim("2", "glucas","245234"));
+//		create(new Userim("3", "lorenzo", "password"));
+//		//update 
+//		update(new Userim("2","lucas UP", "1234lucas"));
+//		//delete
+//		delete("3");
+//		//exist
+//		System.out.println(exist("1"));
+//		System.out.println(exist("3"));
+//		printArrL(selectAll());
+//		printArrL(selectName("up"));
+//	}
 
 }

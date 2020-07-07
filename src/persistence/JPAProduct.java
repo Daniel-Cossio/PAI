@@ -1,4 +1,4 @@
-package presentation;
+package persistence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,24 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Rmovement;
+import entities.Product;
 
-public class JPARmovement {
+public class JPAProduct {	
 
 	//static vars
-	private static String tableName = "rmovement";
+	private static String tableName = "product";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to rmovement table 
+	 * this function select all duples to product table 
 	 * @return
 	 */
-	public static ArrayList<Rmovement>  selectAll(){
+	public static ArrayList<Product>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Rmovement> arrl = new ArrayList<Rmovement>();
+		ArrayList<Product> arl = new ArrayList<Product>();
 
 		//managment connection and result set
 		try{
@@ -34,14 +34,12 @@ public class JPARmovement {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Rmovement(rs.getInt(1), rs.getDate(2), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6), rs.getString(7)));
-//				arrl.add(new Rmovement(rs.getInt(1), new Date(1), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6), rs.getString(7)));
+				arl.add(new Product(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
 			}
 			
-			return arrl;
+			return arl;
 		} catch (SQLException e){
-//			System.err.println(e.getMessage());
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 			return null;
 		}
 
@@ -50,17 +48,17 @@ public class JPARmovement {
 	
 	
 	/**
-	 * This function return all duples to rmovement table with the 
+	 * This function return all duples to product table with the 
 	 * conincidence with search String
 	 * @param str is the string to search
 	 * @return the arraylist consult
 	 */
-	public static ArrayList<Rmovement> selectName(String str){
+	public static ArrayList<Product> selectName(String str){
 		
 		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE code_invoice LIKE '%"+str+"%'";
+		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_p LIKE '%"+str+"%'";
 		//create array list
-		ArrayList<Rmovement> arrl = new ArrayList<Rmovement>();
+		ArrayList<Product> arl = new ArrayList<Product>();
 
 		
 		try{
@@ -70,10 +68,10 @@ public class JPARmovement {
 			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Rmovement(rs.getInt(1), rs.getDate(2), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6), rs.getString(7)));
+				arl.add(new Product(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
 			}
 
-			return arrl;
+			return arl;
 		} catch (SQLException e){
 			System.err.println(e.getMessage());
 			return null;
@@ -82,10 +80,10 @@ public class JPARmovement {
 
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived rmovement 
-	 * @param rmovement
+	 * gived product 
+	 * @param product
 	 */
-	public static void update(Rmovement rmovement) {
+	public static void update(Product product) {
 		//empty connection
 		conn = null;
 		try {
@@ -93,17 +91,13 @@ public class JPARmovement {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET date_m = ?, code_invoice = ?, type_m = ?, quantity = ?, code_p = ?, code_u = ?  " +" WHERE code_m= ?");
+					"UPDATE " + tableName + " SET name_p = ?, measure = ?, code_sg = ? " +" WHERE code_p = ?");
 			
 			//set values
-			pst.setDate(1, rmovement.getDate_m());
-			pst.setString(2, rmovement.getCode_invoice());
-			pst.setString(3, rmovement.getType_m());
-			pst.setDouble(4, rmovement.getQuantity());
-			pst.setString(5, rmovement.getCode_p());
-			pst.setString(6, rmovement.getCode_u());
-			pst.setInt(7, rmovement.getCode_m());
-			
+			pst.setString(1, product.getName_p());
+			pst.setString(2, product.getMeasure());
+			pst.setString(3, product.getCode_sg());
+			pst.setString(4, product.getCode_p());
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -123,17 +117,17 @@ public class JPARmovement {
 	 * @param codeG
 	 */
 
-	public static void delete(int code) {
+	public static void delete(String code) {
 		//empty connection
 		conn  = null;
 		try {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_m = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_p = ?");//prepare querry
 
 			//set values
-			pst.setInt(1, code);
+			pst.setString(1, code);
 			//execute changes in db
 			pst.executeUpdate();
 		}catch (Exception e) {
@@ -145,10 +139,10 @@ public class JPARmovement {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened rmovement
-	 * @param rmovement
+	 * This function create a nwe duple and this storage the givened product
+	 * @param product
 	 */
-	public static void create(Rmovement rmovement) {
+	public static void create(Product product) {
 		//empty connection
 		conn = null;
 
@@ -157,25 +151,13 @@ public class JPARmovement {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " ( date_m, code_invoice, type_m, quantity, code_p, code_u) VALUES (?,?,?,?,?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_p, name_p, measure, code_sg) VALUES (?,?,?,?)");
 
 			//sest values
-//			pst.setInt(1, rmovement.getCode_m());
-//			pst.setDate(2, rmovement.getDate_m());
-//			pst.setString(3, rmovement.getCode_invoice());
-//			pst.setString(4, rmovement.getType_m());
-//			pst.setDouble(5, rmovement.getQuantity());
-//			pst.setString(6, rmovement.getCode_p());
-//			pst.setString(7, rmovement.getCode_u());
-			
-			pst.setDate(1, rmovement.getDate_m());
-			pst.setString(2, rmovement.getCode_invoice());
-			pst.setString(3, rmovement.getType_m());
-			pst.setDouble(4, rmovement.getQuantity());
-			pst.setString(5, rmovement.getCode_p());
-			pst.setString(6, rmovement.getCode_u());
-			
-			 
+			pst.setString(1, product.getCode_p());//insert code
+			pst.setString(2, product.getName_p());//insert name
+			pst.setString(3, product.getMeasure());//insert name
+			pst.setString(4, product.getCode_sg());//insert name
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -206,7 +188,7 @@ public class JPARmovement {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_m = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_p = ?" );
 			//set value
 			pst.setString(1, code);
 			//execute querry
@@ -214,7 +196,7 @@ public class JPARmovement {
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Rmovement");
+			System.out.println("Problems to connect or querry Product");
 			return false;
 		}finally {
 			//closed conection
@@ -227,7 +209,7 @@ public class JPARmovement {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Rmovement> argpp) {
+	public static void printArrL(ArrayList<Product> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -237,20 +219,19 @@ public class JPARmovement {
 	
 	
 //	public static void main(String[] args) {
-//		//create
-//		create(new Rmovement(new Date(120,1,24),"factura453545","Entrada",12314.1234,"1","1")); 
-//		create(new Rmovement(new Date(120,1,25),"453545","Ajuste",1231443.12,"1",null));
-//		create(new Rmovement(new Date(120,1,26),"fact","SALIDA",123144343.1234,null,"2"));
-//		//update 
-//		update(new Rmovement(2,new Date(121,4,30),"45sdf3g5fg45","NONE",1231443.1223,null,null));
-//		//delete
-//		delete(1);
-//		//exist
+		//create
+//		create(new Product("1", "pr1","kilos","1")); 
+//		create(new Product("2", "pr2","Productos",null));
+//		create(new Product("3", "gr3", "gr ","2"));
+		//update 
+//		update(new Product("2","p update", "gramos","1"));
+		//delete
+//		delete("3");
+		//exist
 //		System.out.println(exist("1"));
 //		System.out.println(exist("3"));
 //		printArrL(selectAll());
-//		printArrL(selectName("fac"));
+//		printArrL(selectName("up"));
 //	}
-
 
 }

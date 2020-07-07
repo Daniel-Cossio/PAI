@@ -1,4 +1,4 @@
-package presentation;
+package persistence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,24 +6,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Product;
+import entities.Rmout;
 
-public class JPAProduct {	
+public class JPARmout {
+	
 
 	//static vars
-	private static String tableName = "product";
+	private static String tableName = "rmout";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to product table 
+	 * this function select all duples to rmout table 
 	 * @return
 	 */
-	public static ArrayList<Product>  selectAll(){
+	public static ArrayList<Rmout>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Product> arl = new ArrayList<Product>();
+		ArrayList<Rmout> arrl = new ArrayList<Rmout>();
 
 		//managment connection and result set
 		try{
@@ -34,10 +35,10 @@ public class JPAProduct {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arl.add(new Product(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
+				arrl.add(new Rmout(rs.getInt(1),rs.getString(2)));
 			}
 			
-			return arl;
+			return arrl;
 		} catch (SQLException e){
 			System.err.println(e.getMessage());
 			return null;
@@ -47,43 +48,13 @@ public class JPAProduct {
 	}
 	
 	
-	/**
-	 * This function return all duples to product table with the 
-	 * conincidence with search String
-	 * @param str is the string to search
-	 * @return the arraylist consult
-	 */
-	public static ArrayList<Product> selectName(String str){
-		
-		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_p LIKE '%"+str+"%'";
-		//create array list
-		ArrayList<Product> arl = new ArrayList<Product>();
-
-		
-		try{
-			//getconnection 
-			conn = JPAutil.getConnection();
-			//result set to consult
-			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
-			//loop througth the result set and save this in the arraylist
-			while(rs.next()){
-				arl.add(new Product(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
-			}
-
-			return arl;
-		} catch (SQLException e){
-			System.err.println(e.getMessage());
-			return null;
-		}
-	}
-
+	
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived product 
-	 * @param product
+	 * gived rmout 
+	 * @param rmout
 	 */
-	public static void update(Product product) {
+	public static void update(Rmout rmout) {
 		//empty connection
 		conn = null;
 		try {
@@ -91,13 +62,12 @@ public class JPAProduct {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET name_p = ?, measure = ?, code_sg = ? " +" WHERE code_p = ?");
+					"UPDATE " + tableName + " SET code_d = ? " +" WHERE code_m = ?");
 			
 			//set values
-			pst.setString(1, product.getName_p());
-			pst.setString(2, product.getMeasure());
-			pst.setString(3, product.getCode_sg());
-			pst.setString(4, product.getCode_p());
+			pst.setString(1, rmout.getCode_d());
+			pst.setInt(2, rmout.getCode_m());
+			
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -117,17 +87,17 @@ public class JPAProduct {
 	 * @param codeG
 	 */
 
-	public static void delete(String code) {
+	public static void delete(int code) {
 		//empty connection
 		conn  = null;
 		try {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_p = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_m = ?");//prepare querry
 
 			//set values
-			pst.setString(1, code);
+			pst.setInt(1, code);
 			//execute changes in db
 			pst.executeUpdate();
 		}catch (Exception e) {
@@ -139,10 +109,10 @@ public class JPAProduct {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened product
-	 * @param product
+	 * This function create a nwe duple and this storage the givened rmout
+	 * @param rmout
 	 */
-	public static void create(Product product) {
+	public static void create(Rmout rmout) {
 		//empty connection
 		conn = null;
 
@@ -151,13 +121,11 @@ public class JPAProduct {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_p, name_p, measure, code_sg) VALUES (?,?,?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_m, code_d) VALUES (?,?)");
 
 			//sest values
-			pst.setString(1, product.getCode_p());//insert code
-			pst.setString(2, product.getName_p());//insert name
-			pst.setString(3, product.getMeasure());//insert name
-			pst.setString(4, product.getCode_sg());//insert name
+			pst.setInt(1, rmout.getCode_m());//insert code
+			pst.setString(2, rmout.getCode_d());//insert name 
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -179,7 +147,7 @@ public class JPAProduct {
 	 * @param code
 	 * @return
 	 */
-	public static boolean exist(String code) {
+	public static boolean exist(int code) {
 		//empty connection
 		conn = null;
 		
@@ -188,15 +156,15 @@ public class JPAProduct {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_p = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_m = ?" );
 			//set value
-			pst.setString(1, code);
+			pst.setInt(1, code);
 			//execute querry
 			ResultSet rs = pst.executeQuery();
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Product");
+			System.out.println("Problems to connect or querry Rmout");
 			return false;
 		}finally {
 			//closed conection
@@ -209,7 +177,7 @@ public class JPAProduct {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Product> argpp) {
+	public static void printArrL(ArrayList<Rmout> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -219,19 +187,20 @@ public class JPAProduct {
 	
 	
 //	public static void main(String[] args) {
-		//create
-//		create(new Product("1", "pr1","kilos","1")); 
-//		create(new Product("2", "pr2","Productos",null));
-//		create(new Product("3", "gr3", "gr ","2"));
-		//update 
-//		update(new Product("2","p update", "gramos","1"));
-		//delete
-//		delete("3");
-		//exist
-//		System.out.println(exist("1"));
-//		System.out.println(exist("3"));
+//		//create
+//		create(new Rmout(1, "1")); 
+//		create(new Rmout(2, "1"));
+//		create(new Rmout(3, "2"));
+//		//update 
+//		update(new Rmout(2,"g update"));
+//		//delete
+//		delete(3);
+//		//exist
+//		System.out.println(exist(1));
+//		System.out.println(exist(3));
 //		printArrL(selectAll());
-//		printArrL(selectName("up"));
+//
 //	}
+
 
 }

@@ -1,4 +1,4 @@
-package presentation;
+package persistence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,25 +6,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Rinitialstock;
+import entities.Subgroup;
 
-public class JPARinitialstock {
-
+public class JPASubgroup {
+	
 
 	//static vars
-	private static String tableName = "rinitialstock";
+	private static String tableName = "subgroup";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to rinitialstock table 
+	 * this function select all duples to subgroup table 
 	 * @return
 	 */
-	public static ArrayList<Rinitialstock>  selectAll(){
+	public static ArrayList<Subgroup>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Rinitialstock> arrl = new ArrayList<Rinitialstock>();
+		ArrayList<Subgroup> arrl = new ArrayList<Subgroup>();
 
 		//managment connection and result set
 		try{
@@ -35,7 +35,7 @@ public class JPARinitialstock {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Rinitialstock(rs.getInt(1),rs.getInt(2),rs.getDouble(3)));
+				arrl.add(new Subgroup(rs.getString(1),rs.getString(2),rs.getString(3)));
 			}
 			
 			return arrl;
@@ -47,12 +47,44 @@ public class JPARinitialstock {
 
 	}
 	
+	
+	/**
+	 * This function return all duples to subgroup table with the 
+	 * conincidence with search String
+	 * @param str is the string to search
+	 * @return the arraylist consult
+	 */
+	public static ArrayList<Subgroup> selectName(String str){
+		
+		//query
+		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_sg LIKE '%"+str+"%'";
+		//create array list
+		ArrayList<Subgroup> arrl = new ArrayList<Subgroup>();
+
+		
+		try{
+			//getconnection 
+			conn = JPAutil.getConnection();
+			//result set to consult
+			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
+			//loop througth the result set and save this in the arraylist
+			while(rs.next()){
+				arrl.add(new Subgroup(rs.getString(1),rs.getString(2),rs.getString(3)));
+			}
+
+			return arrl;
+		} catch (SQLException e){
+			System.err.println(e.getMessage());
+			return null;
+		}
+	}
+
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived rinitialstock 
-	 * @param rinitialstock
+	 * gived subgroup 
+	 * @param subgroup
 	 */
-	public static void update(Rinitialstock rinitialstock) {
+	public static void update(Subgroup subgroup) {
 		//empty connection
 		conn = null;
 		try {
@@ -60,12 +92,13 @@ public class JPARinitialstock {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET code_cm = ?, measure = ? " +" WHERE code_m = ?");
+					"UPDATE " + tableName + " SET name_sg = ?, code_g = ? " +" WHERE code_sg = ?");
 			
 			//set values
-			pst.setInt(1, rinitialstock.getCode_cm());
-			pst.setDouble(2, rinitialstock.getMeasure());
-			pst.setInt(3, rinitialstock.getCode_m());
+			pst.setString(1, subgroup.getName_sg());
+			pst.setString(2, subgroup.getCode_g());
+			pst.setString(3, subgroup.getCode_sg());
+			
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -92,7 +125,7 @@ public class JPARinitialstock {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_m = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_sg = ?");//prepare querry
 
 			//set values
 			pst.setString(1, code);
@@ -107,10 +140,10 @@ public class JPARinitialstock {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened rinitialstock
-	 * @param rinitialstock
+	 * This function create a nwe duple and this storage the givened subgroup
+	 * @param subgroup
 	 */
-	public static void create(Rinitialstock rinitialstock) {
+	public static void create(Subgroup subgroup) {
 		//empty connection
 		conn = null;
 
@@ -119,13 +152,12 @@ public class JPARinitialstock {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_m, code_cm, measure) VALUES (?,?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_sg, name_sg, code_g) VALUES (?,?,?)");
 
 			//sest values
-			pst.setInt(1, rinitialstock.getCode_m()); 
-			pst.setInt(2, rinitialstock.getCode_cm());
-			pst.setDouble(3, rinitialstock.getMeasure());
-			 
+			pst.setString(1, subgroup.getCode_sg());//insert code
+			pst.setString(2, subgroup.getName_sg());//insert name
+			pst.setString(3, subgroup.getCode_g());//insert name 
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -156,7 +188,7 @@ public class JPARinitialstock {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_m = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_sg = ?" );
 			//set value
 			pst.setString(1, code);
 			//execute querry
@@ -164,7 +196,7 @@ public class JPARinitialstock {
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Rinitialstock");
+			System.out.println("Problems to connect or querry Subgroup");
 			return false;
 		}finally {
 			//closed conection
@@ -177,7 +209,7 @@ public class JPARinitialstock {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Rinitialstock> argpp) {
+	public static void printArrL(ArrayList<Subgroup> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -187,19 +219,20 @@ public class JPARinitialstock {
 	
 	
 //	public static void main(String[] args) {
-//		//create
-//		create(new Rinitialstock(1,2,2.34));
-//		create(new Rinitialstock(2,2,234.5));
-//		create(new Rinitialstock(3,2,554.5));
-//		//update 
-//		update(new Rinitialstock(2,3,12313.34));
-//		//delete
+//		create
+//		create(new Subgroup("1", "gr1","1")); 
+//		create(new Subgroup("2", "gr2",null));
+//		create(new Subgroup("3", "gr3","2"));
+//		update 
+//		update(new Subgroup("2","g update","2"));
+//		delete
 //		delete("3");
-//		//exist
+//		exist
 //		System.out.println(exist("1"));
 //		System.out.println(exist("3"));
 //		printArrL(selectAll());
 //		printArrL(selectName("up"));
 //	}
+
 
 }
