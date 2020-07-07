@@ -6,26 +6,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Groupp;
+import entities.Rclosemonth;
 
-
-public class JPAGroupp {
+public class JPARclosemonth {
 	
 
+
 	//static vars
-	private static String tableName = "groupp";
+	private static String tableName = "rclosemonth";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to groupp table 
+	 * this function select all duples to rclosemonth table 
 	 * @return
 	 */
-	public static ArrayList<Groupp>  selectAll(){
+	public static ArrayList<Rclosemonth>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Rclosemonth> arrl = new ArrayList<Rclosemonth>();
 
 		//managment connection and result set
 		try{
@@ -36,7 +36,7 @@ public class JPAGroupp {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arrl.add(new Rclosemonth(rs.getInt(1),rs.getDate(2)));
 			}
 			
 			return arrl;
@@ -49,43 +49,13 @@ public class JPAGroupp {
 	}
 	
 	
-	/**
-	 * This function return all duples to groupp table with the 
-	 * conincidence with search String
-	 * @param str is the string to search
-	 * @return the arraylist consult
-	 */
-	public static ArrayList<Groupp> selectName(String str){
-		
-		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_g LIKE '%"+str+"%'";
-		//create array list
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
-
-		
-		try{
-			//getconnection 
-			conn = JPAutil.getConnection();
-			//result set to consult
-			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
-			//loop througth the result set and save this in the arraylist
-			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
-			}
-
-			return arrl;
-		} catch (SQLException e){
-			System.err.println(e.getMessage());
-			return null;
-		}
-	}
-
+	
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived groupp 
-	 * @param groupp
+	 * gived rclosemonth 
+	 * @param rclosemonth
 	 */
-	public static void update(Groupp groupp) {
+	public static void update(Rclosemonth rclosemonth) {
 		//empty connection
 		conn = null;
 		try {
@@ -93,11 +63,11 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET name_g = ? " +" WHERE code_g = ?");
+					"UPDATE " + tableName + " SET date_cm = ? " +" WHERE code_cm = ?");
 			
 			//set values
-			pst.setString(1, groupp.getName_g());
-			pst.setString(2, groupp.getCode_g());
+			pst.setDate(1, rclosemonth.getDate_cm());
+			pst.setInt(2, rclosemonth.getCode_cm());
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -117,17 +87,17 @@ public class JPAGroupp {
 	 * @param codeG
 	 */
 
-	public static void delete(String code) {
+	public static void delete(int code) {
 		//empty connection
 		conn  = null;
 		try {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_g = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_cm = ?");//prepare querry
 
 			//set values
-			pst.setString(1, code);
+			pst.setInt(1, code);
 			//execute changes in db
 			pst.executeUpdate();
 		}catch (Exception e) {
@@ -139,10 +109,10 @@ public class JPAGroupp {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened groupp
-	 * @param groupp
+	 * This function create a nwe duple and this storage the givened rclosemonth
+	 * @param rclosemonth
 	 */
-	public static void create(Groupp groupp) {
+	public static void create(Rclosemonth rclosemonth) {
 		//empty connection
 		conn = null;
 
@@ -151,11 +121,11 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_g, name_g) VALUES (?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_cm, date_cm) VALUES (?,?)");
 
 			//sest values
-			pst.setString(1, groupp.getCode_g());//insert code
-			pst.setString(2, groupp.getName_g());//insert name 
+			pst.setInt(1, rclosemonth.getCode_cm());//insert code
+			pst.setDate(2, rclosemonth.getDate_cm());//insert name 
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -177,7 +147,7 @@ public class JPAGroupp {
 	 * @param code
 	 * @return
 	 */
-	public static boolean exist(String code) {
+	public static boolean exist(int code) {
 		//empty connection
 		conn = null;
 		
@@ -186,15 +156,15 @@ public class JPAGroupp {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_g = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_cm = ?" );
 			//set value
-			pst.setString(1, code);
+			pst.setInt(1, code);
 			//execute querry
 			ResultSet rs = pst.executeQuery();
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Groupp");
+			System.out.println("Problems to connect or querry Rclosemonth");
 			return false;
 		}finally {
 			//closed conection
@@ -207,7 +177,7 @@ public class JPAGroupp {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Groupp> argpp) {
+	public static void printArrL(ArrayList<Rclosemonth> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -217,19 +187,22 @@ public class JPAGroupp {
 	
 	
 //	public static void main(String[] args) {
-//		//create
-//		create(new Groupp("1", "gr1")); 
-//		create(new Groupp("2", "gr2"));
-//		create(new Groupp("3", "gr3"));
-//		//update 
-//		update(new Groupp("2","g update"));
-//		//delete
-//		delete("3");
-//		//exist
-//		System.out.println(exist("1"));
-//		System.out.println(exist("3"));
+		//create
+//		create(new Rclosemonth(1,new Date(2)));
+//		create(new Rclosemonth(2,new Date(2)));
+//		create(new Rclosemonth(3,new Date(2)));
+//		create(new Rclosemonth("2", "gr2"));
+//		create(new Rclosemonth("3", "gr3"));
+		//update 
+//		update(new Rclosemonth(2,new Date(120, 1, 14)));
+		//delete
+//		delete(3);
+		//exist
+//		System.out.println(exist(1));
+//		System.out.println(exist(3));
 //		printArrL(selectAll());
 //		printArrL(selectName("up"));
 //	}
+
 
 }

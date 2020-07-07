@@ -6,26 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Groupp;
+import entities.Userim;
 
-
-public class JPAGroupp {
-	
+public class JPAUserim {
 
 	//static vars
-	private static String tableName = "groupp";
+	private static String tableName = "userim";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to groupp table 
+	 * this function select all duples to userim table 
 	 * @return
 	 */
-	public static ArrayList<Groupp>  selectAll(){
+	public static ArrayList<Userim>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Userim> arrl = new ArrayList<Userim>();
 
 		//managment connection and result set
 		try{
@@ -36,7 +34,7 @@ public class JPAGroupp {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arrl.add(new Userim(rs.getString(1),rs.getString(2),rs.getString(3)));
 			}
 			
 			return arrl;
@@ -50,17 +48,17 @@ public class JPAGroupp {
 	
 	
 	/**
-	 * This function return all duples to groupp table with the 
+	 * This function return all duples to userim table with the 
 	 * conincidence with search String
 	 * @param str is the string to search
 	 * @return the arraylist consult
 	 */
-	public static ArrayList<Groupp> selectName(String str){
+	public static ArrayList<Userim> selectName(String str){
 		
 		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_g LIKE '%"+str+"%'";
+		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_u LIKE '%"+str+"%'";
 		//create array list
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Userim> arrl = new ArrayList<Userim>();
 
 		
 		try{
@@ -70,7 +68,7 @@ public class JPAGroupp {
 			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arrl.add(new Userim(rs.getString(1),rs.getString(2),rs.getString(3)));
 			}
 
 			return arrl;
@@ -82,10 +80,10 @@ public class JPAGroupp {
 
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived groupp 
-	 * @param groupp
+	 * gived userim 
+	 * @param userim
 	 */
-	public static void update(Groupp groupp) {
+	public static void update(Userim userim) {
 		//empty connection
 		conn = null;
 		try {
@@ -93,11 +91,12 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET name_g = ? " +" WHERE code_g = ?");
+					"UPDATE " + tableName + " SET name_u = ?, password_u = ? " +" WHERE code_u = ?");
 			
 			//set values
-			pst.setString(1, groupp.getName_g());
-			pst.setString(2, groupp.getCode_g());
+			pst.setString(1, userim.getName_u());
+			pst.setString(2, userim.getPassword_u());
+			pst.setString(3, userim.getCode_u());
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -124,7 +123,7 @@ public class JPAGroupp {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_g = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_u = ?");//prepare querry
 
 			//set values
 			pst.setString(1, code);
@@ -139,10 +138,10 @@ public class JPAGroupp {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened groupp
-	 * @param groupp
+	 * This function create a nwe duple and this storage the givened userim
+	 * @param userim
 	 */
-	public static void create(Groupp groupp) {
+	public static void create(Userim userim) {
 		//empty connection
 		conn = null;
 
@@ -151,11 +150,12 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_g, name_g) VALUES (?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_u, name_u, password_u) VALUES (?,?,?)");
 
 			//sest values
-			pst.setString(1, groupp.getCode_g());//insert code
-			pst.setString(2, groupp.getName_g());//insert name 
+			pst.setString(1, userim.getCode_u());//insert code
+			pst.setString(2, userim.getName_u());//insert name
+			pst.setString(3, userim.getPassword_u());//insert name 
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -186,7 +186,7 @@ public class JPAGroupp {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_g = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_u = ?" );
 			//set value
 			pst.setString(1, code);
 			//execute querry
@@ -194,7 +194,7 @@ public class JPAGroupp {
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Groupp");
+			System.out.println("Problems to connect or querry Userim");
 			return false;
 		}finally {
 			//closed conection
@@ -207,7 +207,7 @@ public class JPAGroupp {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Groupp> argpp) {
+	public static void printArrL(ArrayList<Userim> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -218,11 +218,11 @@ public class JPAGroupp {
 	
 //	public static void main(String[] args) {
 //		//create
-//		create(new Groupp("1", "gr1")); 
-//		create(new Groupp("2", "gr2"));
-//		create(new Groupp("3", "gr3"));
+//		create(new Userim("1", "fernaando","sadfas534")); 
+//		create(new Userim("2", "glucas","245234"));
+//		create(new Userim("3", "lorenzo", "password"));
 //		//update 
-//		update(new Groupp("2","g update"));
+//		update(new Userim("2","lucas UP", "1234lucas"));
 //		//delete
 //		delete("3");
 //		//exist

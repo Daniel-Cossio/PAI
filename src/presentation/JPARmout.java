@@ -6,26 +6,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Groupp;
+import entities.Rmout;
 
-
-public class JPAGroupp {
+public class JPARmout {
 	
 
 	//static vars
-	private static String tableName = "groupp";
+	private static String tableName = "rmout";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to groupp table 
+	 * this function select all duples to rmout table 
 	 * @return
 	 */
-	public static ArrayList<Groupp>  selectAll(){
+	public static ArrayList<Rmout>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Rmout> arrl = new ArrayList<Rmout>();
 
 		//managment connection and result set
 		try{
@@ -36,7 +35,7 @@ public class JPAGroupp {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arrl.add(new Rmout(rs.getInt(1),rs.getString(2)));
 			}
 			
 			return arrl;
@@ -49,43 +48,13 @@ public class JPAGroupp {
 	}
 	
 	
-	/**
-	 * This function return all duples to groupp table with the 
-	 * conincidence with search String
-	 * @param str is the string to search
-	 * @return the arraylist consult
-	 */
-	public static ArrayList<Groupp> selectName(String str){
-		
-		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_g LIKE '%"+str+"%'";
-		//create array list
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
-
-		
-		try{
-			//getconnection 
-			conn = JPAutil.getConnection();
-			//result set to consult
-			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
-			//loop througth the result set and save this in the arraylist
-			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
-			}
-
-			return arrl;
-		} catch (SQLException e){
-			System.err.println(e.getMessage());
-			return null;
-		}
-	}
-
+	
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived groupp 
-	 * @param groupp
+	 * gived rmout 
+	 * @param rmout
 	 */
-	public static void update(Groupp groupp) {
+	public static void update(Rmout rmout) {
 		//empty connection
 		conn = null;
 		try {
@@ -93,11 +62,12 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET name_g = ? " +" WHERE code_g = ?");
+					"UPDATE " + tableName + " SET code_d = ? " +" WHERE code_m = ?");
 			
 			//set values
-			pst.setString(1, groupp.getName_g());
-			pst.setString(2, groupp.getCode_g());
+			pst.setString(1, rmout.getCode_d());
+			pst.setInt(2, rmout.getCode_m());
+			
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -117,17 +87,17 @@ public class JPAGroupp {
 	 * @param codeG
 	 */
 
-	public static void delete(String code) {
+	public static void delete(int code) {
 		//empty connection
 		conn  = null;
 		try {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_g = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_m = ?");//prepare querry
 
 			//set values
-			pst.setString(1, code);
+			pst.setInt(1, code);
 			//execute changes in db
 			pst.executeUpdate();
 		}catch (Exception e) {
@@ -139,10 +109,10 @@ public class JPAGroupp {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened groupp
-	 * @param groupp
+	 * This function create a nwe duple and this storage the givened rmout
+	 * @param rmout
 	 */
-	public static void create(Groupp groupp) {
+	public static void create(Rmout rmout) {
 		//empty connection
 		conn = null;
 
@@ -151,11 +121,11 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_g, name_g) VALUES (?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_m, code_d) VALUES (?,?)");
 
 			//sest values
-			pst.setString(1, groupp.getCode_g());//insert code
-			pst.setString(2, groupp.getName_g());//insert name 
+			pst.setInt(1, rmout.getCode_m());//insert code
+			pst.setString(2, rmout.getCode_d());//insert name 
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -177,7 +147,7 @@ public class JPAGroupp {
 	 * @param code
 	 * @return
 	 */
-	public static boolean exist(String code) {
+	public static boolean exist(int code) {
 		//empty connection
 		conn = null;
 		
@@ -186,15 +156,15 @@ public class JPAGroupp {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_g = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_m = ?" );
 			//set value
-			pst.setString(1, code);
+			pst.setInt(1, code);
 			//execute querry
 			ResultSet rs = pst.executeQuery();
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Groupp");
+			System.out.println("Problems to connect or querry Rmout");
 			return false;
 		}finally {
 			//closed conection
@@ -207,7 +177,7 @@ public class JPAGroupp {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Groupp> argpp) {
+	public static void printArrL(ArrayList<Rmout> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -218,18 +188,19 @@ public class JPAGroupp {
 	
 //	public static void main(String[] args) {
 //		//create
-//		create(new Groupp("1", "gr1")); 
-//		create(new Groupp("2", "gr2"));
-//		create(new Groupp("3", "gr3"));
+//		create(new Rmout(1, "1")); 
+//		create(new Rmout(2, "1"));
+//		create(new Rmout(3, "2"));
 //		//update 
-//		update(new Groupp("2","g update"));
+//		update(new Rmout(2,"g update"));
 //		//delete
-//		delete("3");
+//		delete(3);
 //		//exist
-//		System.out.println(exist("1"));
-//		System.out.println(exist("3"));
+//		System.out.println(exist(1));
+//		System.out.println(exist(3));
 //		printArrL(selectAll());
-//		printArrL(selectName("up"));
+//
 //	}
+
 
 }

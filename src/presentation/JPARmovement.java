@@ -6,26 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Groupp;
+import entities.Rmovement;
 
-
-public class JPAGroupp {
-	
+public class JPARmovement {
 
 	//static vars
-	private static String tableName = "groupp";
+	private static String tableName = "rmovement";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to groupp table 
+	 * this function select all duples to rmovement table 
 	 * @return
 	 */
-	public static ArrayList<Groupp>  selectAll(){
+	public static ArrayList<Rmovement>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Rmovement> arrl = new ArrayList<Rmovement>();
 
 		//managment connection and result set
 		try{
@@ -36,12 +34,14 @@ public class JPAGroupp {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arrl.add(new Rmovement(rs.getInt(1), rs.getDate(2), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6), rs.getString(7)));
+//				arrl.add(new Rmovement(rs.getInt(1), new Date(1), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6), rs.getString(7)));
 			}
 			
 			return arrl;
 		} catch (SQLException e){
-			System.err.println(e.getMessage());
+//			System.err.println(e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 
@@ -50,17 +50,17 @@ public class JPAGroupp {
 	
 	
 	/**
-	 * This function return all duples to groupp table with the 
+	 * This function return all duples to rmovement table with the 
 	 * conincidence with search String
 	 * @param str is the string to search
 	 * @return the arraylist consult
 	 */
-	public static ArrayList<Groupp> selectName(String str){
+	public static ArrayList<Rmovement> selectName(String str){
 		
 		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_g LIKE '%"+str+"%'";
+		String sqlQ = "SELECT * FROM " + tableName + " WHERE code_invoice LIKE '%"+str+"%'";
 		//create array list
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Rmovement> arrl = new ArrayList<Rmovement>();
 
 		
 		try{
@@ -70,7 +70,7 @@ public class JPAGroupp {
 			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arrl.add(new Rmovement(rs.getInt(1), rs.getDate(2), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6), rs.getString(7)));
 			}
 
 			return arrl;
@@ -82,10 +82,10 @@ public class JPAGroupp {
 
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived groupp 
-	 * @param groupp
+	 * gived rmovement 
+	 * @param rmovement
 	 */
-	public static void update(Groupp groupp) {
+	public static void update(Rmovement rmovement) {
 		//empty connection
 		conn = null;
 		try {
@@ -93,11 +93,17 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET name_g = ? " +" WHERE code_g = ?");
+					"UPDATE " + tableName + " SET date_m = ?, code_invoice = ?, type_m = ?, quantity = ?, code_p = ?, code_u = ?  " +" WHERE code_m= ?");
 			
 			//set values
-			pst.setString(1, groupp.getName_g());
-			pst.setString(2, groupp.getCode_g());
+			pst.setDate(1, rmovement.getDate_m());
+			pst.setString(2, rmovement.getCode_invoice());
+			pst.setString(3, rmovement.getType_m());
+			pst.setDouble(4, rmovement.getQuantity());
+			pst.setString(5, rmovement.getCode_p());
+			pst.setString(6, rmovement.getCode_u());
+			pst.setInt(7, rmovement.getCode_m());
+			
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -117,17 +123,17 @@ public class JPAGroupp {
 	 * @param codeG
 	 */
 
-	public static void delete(String code) {
+	public static void delete(int code) {
 		//empty connection
 		conn  = null;
 		try {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_g = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_m = ?");//prepare querry
 
 			//set values
-			pst.setString(1, code);
+			pst.setInt(1, code);
 			//execute changes in db
 			pst.executeUpdate();
 		}catch (Exception e) {
@@ -139,10 +145,10 @@ public class JPAGroupp {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened groupp
-	 * @param groupp
+	 * This function create a nwe duple and this storage the givened rmovement
+	 * @param rmovement
 	 */
-	public static void create(Groupp groupp) {
+	public static void create(Rmovement rmovement) {
 		//empty connection
 		conn = null;
 
@@ -151,11 +157,25 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_g, name_g) VALUES (?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " ( date_m, code_invoice, type_m, quantity, code_p, code_u) VALUES (?,?,?,?,?,?)");
 
 			//sest values
-			pst.setString(1, groupp.getCode_g());//insert code
-			pst.setString(2, groupp.getName_g());//insert name 
+//			pst.setInt(1, rmovement.getCode_m());
+//			pst.setDate(2, rmovement.getDate_m());
+//			pst.setString(3, rmovement.getCode_invoice());
+//			pst.setString(4, rmovement.getType_m());
+//			pst.setDouble(5, rmovement.getQuantity());
+//			pst.setString(6, rmovement.getCode_p());
+//			pst.setString(7, rmovement.getCode_u());
+			
+			pst.setDate(1, rmovement.getDate_m());
+			pst.setString(2, rmovement.getCode_invoice());
+			pst.setString(3, rmovement.getType_m());
+			pst.setDouble(4, rmovement.getQuantity());
+			pst.setString(5, rmovement.getCode_p());
+			pst.setString(6, rmovement.getCode_u());
+			
+			 
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -186,7 +206,7 @@ public class JPAGroupp {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_g = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_m = ?" );
 			//set value
 			pst.setString(1, code);
 			//execute querry
@@ -194,7 +214,7 @@ public class JPAGroupp {
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Groupp");
+			System.out.println("Problems to connect or querry Rmovement");
 			return false;
 		}finally {
 			//closed conection
@@ -207,7 +227,7 @@ public class JPAGroupp {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Groupp> argpp) {
+	public static void printArrL(ArrayList<Rmovement> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -218,18 +238,19 @@ public class JPAGroupp {
 	
 //	public static void main(String[] args) {
 //		//create
-//		create(new Groupp("1", "gr1")); 
-//		create(new Groupp("2", "gr2"));
-//		create(new Groupp("3", "gr3"));
+//		create(new Rmovement(new Date(120,1,24),"factura453545","Entrada",12314.1234,"1","1")); 
+//		create(new Rmovement(new Date(120,1,25),"453545","Ajuste",1231443.12,"1",null));
+//		create(new Rmovement(new Date(120,1,26),"fact","SALIDA",123144343.1234,null,"2"));
 //		//update 
-//		update(new Groupp("2","g update"));
+//		update(new Rmovement(2,new Date(121,4,30),"45sdf3g5fg45","NONE",1231443.1223,null,null));
 //		//delete
-//		delete("3");
+//		delete(1);
 //		//exist
 //		System.out.println(exist("1"));
 //		System.out.println(exist("3"));
 //		printArrL(selectAll());
-//		printArrL(selectName("up"));
+//		printArrL(selectName("fac"));
 //	}
+
 
 }

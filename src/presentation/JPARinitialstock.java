@@ -6,26 +6,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Groupp;
+import entities.Rinitialstock;
 
+public class JPARinitialstock {
 
-public class JPAGroupp {
-	
 
 	//static vars
-	private static String tableName = "groupp";
+	private static String tableName = "rinitialstock";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to groupp table 
+	 * this function select all duples to rinitialstock table 
 	 * @return
 	 */
-	public static ArrayList<Groupp>  selectAll(){
+	public static ArrayList<Rinitialstock>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Rinitialstock> arrl = new ArrayList<Rinitialstock>();
 
 		//managment connection and result set
 		try{
@@ -36,7 +35,7 @@ public class JPAGroupp {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arrl.add(new Rinitialstock(rs.getInt(1),rs.getInt(2),rs.getDouble(3)));
 			}
 			
 			return arrl;
@@ -48,44 +47,12 @@ public class JPAGroupp {
 
 	}
 	
-	
-	/**
-	 * This function return all duples to groupp table with the 
-	 * conincidence with search String
-	 * @param str is the string to search
-	 * @return the arraylist consult
-	 */
-	public static ArrayList<Groupp> selectName(String str){
-		
-		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_g LIKE '%"+str+"%'";
-		//create array list
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
-
-		
-		try{
-			//getconnection 
-			conn = JPAutil.getConnection();
-			//result set to consult
-			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
-			//loop througth the result set and save this in the arraylist
-			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
-			}
-
-			return arrl;
-		} catch (SQLException e){
-			System.err.println(e.getMessage());
-			return null;
-		}
-	}
-
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived groupp 
-	 * @param groupp
+	 * gived rinitialstock 
+	 * @param rinitialstock
 	 */
-	public static void update(Groupp groupp) {
+	public static void update(Rinitialstock rinitialstock) {
 		//empty connection
 		conn = null;
 		try {
@@ -93,11 +60,12 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET name_g = ? " +" WHERE code_g = ?");
+					"UPDATE " + tableName + " SET code_cm = ?, measure = ? " +" WHERE code_m = ?");
 			
 			//set values
-			pst.setString(1, groupp.getName_g());
-			pst.setString(2, groupp.getCode_g());
+			pst.setInt(1, rinitialstock.getCode_cm());
+			pst.setDouble(2, rinitialstock.getMeasure());
+			pst.setInt(3, rinitialstock.getCode_m());
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -124,7 +92,7 @@ public class JPAGroupp {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_g = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_m = ?");//prepare querry
 
 			//set values
 			pst.setString(1, code);
@@ -139,10 +107,10 @@ public class JPAGroupp {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened groupp
-	 * @param groupp
+	 * This function create a nwe duple and this storage the givened rinitialstock
+	 * @param rinitialstock
 	 */
-	public static void create(Groupp groupp) {
+	public static void create(Rinitialstock rinitialstock) {
 		//empty connection
 		conn = null;
 
@@ -151,11 +119,13 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_g, name_g) VALUES (?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_m, code_cm, measure) VALUES (?,?,?)");
 
 			//sest values
-			pst.setString(1, groupp.getCode_g());//insert code
-			pst.setString(2, groupp.getName_g());//insert name 
+			pst.setInt(1, rinitialstock.getCode_m()); 
+			pst.setInt(2, rinitialstock.getCode_cm());
+			pst.setDouble(3, rinitialstock.getMeasure());
+			 
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -186,7 +156,7 @@ public class JPAGroupp {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_g = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_m = ?" );
 			//set value
 			pst.setString(1, code);
 			//execute querry
@@ -194,7 +164,7 @@ public class JPAGroupp {
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Groupp");
+			System.out.println("Problems to connect or querry Rinitialstock");
 			return false;
 		}finally {
 			//closed conection
@@ -207,7 +177,7 @@ public class JPAGroupp {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Groupp> argpp) {
+	public static void printArrL(ArrayList<Rinitialstock> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -218,11 +188,11 @@ public class JPAGroupp {
 	
 //	public static void main(String[] args) {
 //		//create
-//		create(new Groupp("1", "gr1")); 
-//		create(new Groupp("2", "gr2"));
-//		create(new Groupp("3", "gr3"));
+//		create(new Rinitialstock(1,2,2.34));
+//		create(new Rinitialstock(2,2,234.5));
+//		create(new Rinitialstock(3,2,554.5));
 //		//update 
-//		update(new Groupp("2","g update"));
+//		update(new Rinitialstock(2,3,12313.34));
 //		//delete
 //		delete("3");
 //		//exist

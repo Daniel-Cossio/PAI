@@ -23,7 +23,7 @@ CREATE TABLE `product` (
 
 CREATE TABLE `department`(
     `code_d`    TEXT NOT NULL,
-    `name_d` TEXT,
+    `name_d` 	TEXT,
     PRIMARY KEY(`code_d`)
 );
 
@@ -36,7 +36,7 @@ CREATE TABLE `userim` (
 
 CREATE TABLE `rmovement` (
 	`code_m`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	`date_m`	TEXT,
+	`date_m`	DATE,
 	`code_invoice`	TEXT,
 	`type_m`	TEXT,
 	`quantity`	NUMERIC,

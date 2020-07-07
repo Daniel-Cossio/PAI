@@ -6,26 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Groupp;
+import entities.Product;
 
-
-public class JPAGroupp {
-	
+public class JPAProduct {	
 
 	//static vars
-	private static String tableName = "groupp";
+	private static String tableName = "product";
 	private static Connection conn =null;
 
 	/**
-	 * this function select all duples to groupp table 
+	 * this function select all duples to product table 
 	 * @return
 	 */
-	public static ArrayList<Groupp>  selectAll(){
+	public static ArrayList<Product>  selectAll(){
 		
 		//query
 		String sqlQ = "SELECT * FROM " + tableName;
 		//create arraylisto to return
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Product> arl = new ArrayList<Product>();
 
 		//managment connection and result set
 		try{
@@ -36,10 +34,10 @@ public class JPAGroupp {
 			
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arl.add(new Product(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
 			}
 			
-			return arrl;
+			return arl;
 		} catch (SQLException e){
 			System.err.println(e.getMessage());
 			return null;
@@ -50,17 +48,17 @@ public class JPAGroupp {
 	
 	
 	/**
-	 * This function return all duples to groupp table with the 
+	 * This function return all duples to product table with the 
 	 * conincidence with search String
 	 * @param str is the string to search
 	 * @return the arraylist consult
 	 */
-	public static ArrayList<Groupp> selectName(String str){
+	public static ArrayList<Product> selectName(String str){
 		
 		//query
-		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_g LIKE '%"+str+"%'";
+		String sqlQ = "SELECT * FROM " + tableName + " WHERE name_p LIKE '%"+str+"%'";
 		//create array list
-		ArrayList<Groupp> arrl = new ArrayList<Groupp>();
+		ArrayList<Product> arl = new ArrayList<Product>();
 
 		
 		try{
@@ -70,10 +68,10 @@ public class JPAGroupp {
 			ResultSet rs = conn.prepareStatement(sqlQ).executeQuery();
 			//loop througth the result set and save this in the arraylist
 			while(rs.next()){
-				arrl.add(new Groupp(rs.getString(1),rs.getString(2)));
+				arl.add(new Product(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
 			}
 
-			return arrl;
+			return arl;
 		} catch (SQLException e){
 			System.err.println(e.getMessage());
 			return null;
@@ -82,10 +80,10 @@ public class JPAGroupp {
 
 	/**
 	 * rhis functiopn update the spesific duple by the 
-	 * gived groupp 
-	 * @param groupp
+	 * gived product 
+	 * @param product
 	 */
-	public static void update(Groupp groupp) {
+	public static void update(Product product) {
 		//empty connection
 		conn = null;
 		try {
@@ -93,11 +91,13 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection();
 			//statment to process
 			PreparedStatement pst = conn.prepareStatement(
-					"UPDATE " + tableName + " SET name_g = ? " +" WHERE code_g = ?");
+					"UPDATE " + tableName + " SET name_p = ?, measure = ?, code_sg = ? " +" WHERE code_p = ?");
 			
 			//set values
-			pst.setString(1, groupp.getName_g());
-			pst.setString(2, groupp.getCode_g());
+			pst.setString(1, product.getName_p());
+			pst.setString(2, product.getMeasure());
+			pst.setString(3, product.getCode_sg());
+			pst.setString(4, product.getCode_p());
 			
 			//execute changes in db
 			pst.executeUpdate();
@@ -124,7 +124,7 @@ public class JPAGroupp {
 			//get connection 
 			conn  = JPAutil.getConnection();
 			//statment to process
-			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_g = ?");//prepare querry
+			PreparedStatement pst = conn.prepareStatement("DELETE FROM "+ tableName+ " WHERE code_p = ?");//prepare querry
 
 			//set values
 			pst.setString(1, code);
@@ -139,10 +139,10 @@ public class JPAGroupp {
 	}
 
 	/**
-	 * This function create a nwe duple and this storage the givened groupp
-	 * @param groupp
+	 * This function create a nwe duple and this storage the givened product
+	 * @param product
 	 */
-	public static void create(Groupp groupp) {
+	public static void create(Product product) {
 		//empty connection
 		conn = null;
 
@@ -151,11 +151,13 @@ public class JPAGroupp {
 			conn = JPAutil.getConnection(); 
 
 			//statement process
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_g, name_g) VALUES (?,?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO " + tableName + " (code_p, name_p, measure, code_sg) VALUES (?,?,?,?)");
 
 			//sest values
-			pst.setString(1, groupp.getCode_g());//insert code
-			pst.setString(2, groupp.getName_g());//insert name 
+			pst.setString(1, product.getCode_p());//insert code
+			pst.setString(2, product.getName_p());//insert name
+			pst.setString(3, product.getMeasure());//insert name
+			pst.setString(4, product.getCode_sg());//insert name
 
 			//execute change in DBS
 			pst.executeUpdate();
@@ -186,7 +188,7 @@ public class JPAGroupp {
 		try {
 			conn = JPAutil.getConnection();//get connection to dbs
 			//statement to process
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_g = ?" );
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE code_p = ?" );
 			//set value
 			pst.setString(1, code);
 			//execute querry
@@ -194,7 +196,7 @@ public class JPAGroupp {
 			//return the existence
 			return rs.next();
 		} catch (Exception e) {
-			System.out.println("Problems to connect or querry Groupp");
+			System.out.println("Problems to connect or querry Product");
 			return false;
 		}finally {
 			//closed conection
@@ -207,7 +209,7 @@ public class JPAGroupp {
 	 * @param argpp
 	 */
 	
-	public static void printArrL(ArrayList<Groupp> argpp) {
+	public static void printArrL(ArrayList<Product> argpp) {
 		if (argpp != null)
 			for (int i = 0; i < argpp.size(); i++) {
 				System.out.println("---------------------------------------------");
@@ -217,15 +219,15 @@ public class JPAGroupp {
 	
 	
 //	public static void main(String[] args) {
-//		//create
-//		create(new Groupp("1", "gr1")); 
-//		create(new Groupp("2", "gr2"));
-//		create(new Groupp("3", "gr3"));
-//		//update 
-//		update(new Groupp("2","g update"));
-//		//delete
+		//create
+//		create(new Product("1", "pr1","kilos","1")); 
+//		create(new Product("2", "pr2","Productos",null));
+//		create(new Product("3", "gr3", "gr ","2"));
+		//update 
+//		update(new Product("2","p update", "gramos","1"));
+		//delete
 //		delete("3");
-//		//exist
+		//exist
 //		System.out.println(exist("1"));
 //		System.out.println(exist("3"));
 //		printArrL(selectAll());
